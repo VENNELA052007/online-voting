@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="brand">Online Voting System</a>
+    <button id="logoutButton" class="button">Logout</button>
+  </header>
+  <main class="page-content">
+    <div class="page-heading">
+      <div>
+        <p class="tag">ADMIN MODULE</p>
+        <h1>Admin Dashboard</h1>
+      </div>
+      <div>
+        <span>Election: </span><span id="electionStatus" class="status"></span>
+        <button id="toggleElection" class="button secondary"></button>
+      </div>
+    </div>
+    <div class="grid">
+      <section class="panel">
+        <h2>Add Candidate</h2>
+        <form id="candidateForm">
+          <label for="candidateName">Candidate name</label>
+          <input id="candidateName" type="text" required>
+          <label for="candidateParty">Party or group</label>
+          <input id="candidateParty" type="text" required>
+          <button class="button" type="submit">Add Candidate</button>
+        </form>
+        <p id="candidateMessage" class="message"></p>
+      </section>
+      <section class="panel">
+        <h2>Candidates</h2>
+        <div id="candidateList" class="card-list"></div>
+      </section>
+    </div>
+    <div class="grid">
+      <section class="panel">
+        <h2>Registered Voters</h2>
+        <div id="voterList"></div>
+      </section>
+      <section class="panel">
+        <h2>Election Results</h2>
+        <div id="resultList"></div>
+      </section>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup - Online Voting System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="brand">Online Voting System</a>
+    <a href="login.html">Login</a>
+  </header>
+  <main class="form-page">
+    <form id="signupForm" class="form-card">
+      <h1>Voter Signup</h1>
+      <label for="name">Name</label>
+      <input id="name" type="text" required>
+      <label for="dob">Date of Birth</label>
+      <input id="dob" type="date" required>
+      <label for="email">Email</label>
+      <input id="email" type="email" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" required>
+      <label for="confirmPassword">Confirm Password</label>
+      <input id="confirmPassword" type="password" required>
+      <p id="message" class="message"></p>
+      <button type="submit" class="button">Sign up</button>
+    </form>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
