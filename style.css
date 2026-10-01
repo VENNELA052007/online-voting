@@ -29,7 +29,7 @@ body {
 }
 
 .hero {
-  min-height: 100vh;
+  min-height: 65vh;
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 40px;
@@ -154,6 +154,23 @@ input, select {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   margin-top: 25px;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.modules h2 {
+  margin-bottom: 8px;
+  color: #123b5d;
+}
+
+.modules h3 {
+  margin-top: 0;
+  color: #123b5d;
 }
 
 .panel h2 {
