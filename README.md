@@ -1,28 +1,32 @@
 # Online Voting System
 
-This is a small student project for managing a student election. It uses HTML, CSS and JavaScript.
+This project is a simple website for a student election. I made it using HTML, CSS and JavaScript.
 
 ## Modules
 
-- Admin: logs in, manages candidates, opens or closes the election, views voters and checks results.
-- Voter: signs up, logs in, views candidates and submits one vote while the election is open.
+- Admin: logs in, adds or removes candidates, controls the election and checks voters and results.
+- Voter: signs up, logs in, looks at candidates and votes once when voting is open.
 
 ## Run the project
 
-Open `index.html` in a web browser. Signup, login and voting data are stored in that browser's Local Storage.
+Open `index.html` in a web browser. The pages use CSS Grid and Flexbox for their layout. Signup, login and voting data are saved in the browser's Local Storage.
 
 Admin demo login:
 
 - Email: `admin@voting.com`
 - Password: `admin123`
 
-## Project demonstration
+## Demo steps
 
-1. Login as admin and add a candidate if needed.
-2. Start the election.
-3. Signup as a voter using a date of birth that makes the voter 18 or older.
-4. Login as that voter and submit one vote.
-5. Login as admin again and show the voter list and results.
+1. Login with the admin account and add a candidate.
+2. Start voting from the admin page.
+3. Create a voter account. Use a date of birth that makes the voter 18 or older.
+4. Login as the voter and choose one candidate.
+5. Login as admin again and check the results.
+
+## What I used
+
+The signup and login information, candidates, election status and votes are saved in Local Storage. JavaScript checks the voter's age and stops the same account from voting twice. The project is for a browser demo, so it does not have a server or database.
 
 ## Git deployment
 
