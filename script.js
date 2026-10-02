@@ -59,9 +59,11 @@ function setupSignup() {
     }
 
     const users = getData("users", []);
-    if (users.some(user => user.email === email)) {
-      showMessage("message", "An account with this email already exists.");
-      return;
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].email === email) {
+        showMessage("message", "An account with this email already exists.");
+        return;
+      }
     }
     users.push({ name, dob, email, password });
     saveData("users", users);
@@ -82,7 +84,14 @@ function setupLogin() {
       return;
     }
 
-    const user = getData("users", []).find(item => item.email === email && item.password === password);
+    const users = getData("users", []);
+    let user = null;
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].email === email && users[i].password === password) {
+        user = users[i];
+        break;
+      }
+    }
     if (!user) {
       showMessage("message", "Invalid email or password.");
       return;
@@ -132,8 +141,14 @@ function addCandidate(event) {
 }
 
 function deleteCandidate(id) {
-  const candidates = getData("candidates", []).filter(candidate => candidate.id !== id);
-  saveData("candidates", candidates);
+  const oldCandidates = getData("candidates", []);
+  const newCandidates = [];
+  for (let i = 0; i < oldCandidates.length; i++) {
+    if (oldCandidates[i].id !== id) {
+      newCandidates.push(oldCandidates[i]);
+    }
+  }
+  saveData("candidates", newCandidates);
   renderAdmin();
 }
 
@@ -153,16 +168,31 @@ function renderAdmin() {
   status.className = isOpen ? "status" : "status closed";
   document.getElementById("toggleElection").textContent = isOpen ? "Stop Election" : "Start Election";
 
-  document.getElementById("candidateList").innerHTML = candidates.length ? candidates.map(candidate =>
-    `<div class="candidate-card"><div><h3>${candidate.name}</h3><p>${candidate.party}</p></div><button class="button danger" data-id="${candidate.id}">Delete</button></div>`
-  ).join("") : "<p>No candidates added.</p>";
+  let candidateHtml = "";
+  for (let i = 0; i < candidates.length; i++) {
+    const candidate = candidates[i];
+    candidateHtml += `<div class="candidate-card"><div><h3>${candidate.name}</h3><p>${candidate.party}</p></div><button class="button danger" data-id="${candidate.id}">Delete</button></div>`;
+  }
+  document.getElementById("candidateList").innerHTML = candidateHtml || "<p>No candidates added.</p>";
 
-  document.getElementById("voterList").innerHTML = users.length ? `<table><tr><th>Name</th><th>Email</th></tr>${users.map(user => `<tr><td>${user.name}</td><td>${user.email}</td></tr>`).join("")}</table>` : "<p>No registered voters yet.</p>";
+  let voterHtml = "<table><tr><th>Name</th><th>Email</th></tr>";
+  for (let i = 0; i < users.length; i++) {
+    voterHtml += `<tr><td>${users[i].name}</td><td>${users[i].email}</td></tr>`;
+  }
+  voterHtml += "</table>";
+  document.getElementById("voterList").innerHTML = users.length ? voterHtml : "<p>No registered voters yet.</p>";
 
-  document.getElementById("resultList").innerHTML = candidates.length ? candidates.map(candidate => {
-    const count = votes.filter(vote => vote.candidateId === candidate.id).length;
-    return `<p><strong>${candidate.name}</strong>: ${count} vote(s)</p>`;
-  }).join("") : "<p>No results to show.</p>";
+  let resultHtml = "";
+  for (let i = 0; i < candidates.length; i++) {
+    let voteCount = 0;
+    for (let j = 0; j < votes.length; j++) {
+      if (votes[j].candidateId === candidates[i].id) {
+        voteCount++;
+      }
+    }
+    resultHtml += `<p><strong>${candidates[i].name}</strong>: ${voteCount} vote(s)</p>`;
+  }
+  document.getElementById("resultList").innerHTML = resultHtml || "<p>No results to show.</p>";
 }
 
 function setupUser() {
@@ -176,7 +206,14 @@ function setupUser() {
 
 function renderUser(currentUser) {
   const isOpen = localStorage.getItem("electionOpen") === "true";
-  const hasVoted = getData("votes", []).some(vote => vote.email === currentUser.email);
+  const votes = getData("votes", []);
+  let hasVoted = false;
+  for (let i = 0; i < votes.length; i++) {
+    if (votes[i].email === currentUser.email) {
+      hasVoted = true;
+      break;
+    }
+  }
   const candidates = getData("candidates", []);
   document.getElementById("electionStatus").textContent = isOpen ? "Election is open" : "Election is closed";
   document.getElementById("electionStatus").className = isOpen ? "status" : "status closed";
@@ -188,9 +225,12 @@ function renderUser(currentUser) {
     showMessage("voteMessage", "Voting is currently closed.");
   }
 
-  list.innerHTML = candidates.length ? candidates.map(candidate =>
-    `<label class="candidate-card"><span><input type="radio" name="candidate" value="${candidate.id}" ${hasVoted || !isOpen ? "disabled" : ""}> <strong>${candidate.name}</strong> - ${candidate.party}</span></label>`
-  ).join("") : "<p>No candidates are available.</p>";
+  let candidateHtml = "";
+  for (let i = 0; i < candidates.length; i++) {
+    const candidate = candidates[i];
+    candidateHtml += `<label class="candidate-card"><span><input type="radio" name="candidate" value="${candidate.id}" ${hasVoted || !isOpen ? "disabled" : ""}> <strong>${candidate.name}</strong> - ${candidate.party}</span></label>`;
+  }
+  list.innerHTML = candidateHtml || "<p>No candidates are available.</p>";
   document.getElementById("voteButton").disabled = hasVoted || !isOpen || candidates.length === 0;
 }
 
@@ -207,9 +247,11 @@ function castVote(event) {
     showMessage("voteMessage", "Please select a candidate.");
     return;
   }
-  if (votes.some(vote => vote.email === currentUser.email)) {
-    showMessage("voteMessage", "You have already voted.");
-    return;
+  for (let i = 0; i < votes.length; i++) {
+    if (votes[i].email === currentUser.email) {
+      showMessage("voteMessage", "You have already voted.");
+      return;
+    }
   }
   votes.push({ email: currentUser.email, candidateId: Number(selected.value) });
   saveData("votes", votes);
