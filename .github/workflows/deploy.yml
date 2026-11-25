@@ -6,16 +6,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
-  id-token: write
 
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Check out project
@@ -27,27 +26,18 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
       - name: Install packages
         run: npm ci
 
       - name: Build website
         run: npm run build
 
-      - name: Upload website artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+      - name: Add Pages marker
+        run: touch dist/.nojekyll
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy website
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish built website
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
